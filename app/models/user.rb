@@ -9,5 +9,13 @@ class User < ApplicationRecord
   has_many :participated_movies, :through => :movie_favorites, :source => :movie
   def is_member_of?(movie)
         participated_movies.include?(movie)
-      end
+  end
+
+  def favorite!(movie)
+    participated_movies << movie
+  end
+
+  def cancel!(movie)
+    participated_movies.delete(movie)
+  end
 end
