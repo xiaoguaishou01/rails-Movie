@@ -13,6 +13,7 @@ before_action :find_movie_and_check_permission, only: [:edit, :update, :destroy]
    @movie = Movie.new(movie_params)
    @movie.user = current_user
    if @movie.save
+     current_user.favorite!(@movie)
      redirect_to movies_path
    else
      render :new
@@ -64,7 +65,7 @@ before_action :find_movie_and_check_permission, only: [:edit, :update, :destroy]
     @movie = Movie.find(params[:id])
 
     if current_user.is_member_of?(@movie)
-      current_user.quit!(@movie)
+      current_user.cancel!(@movie)
       flash[:alert] = "已取消收藏该电影！"
     else
       flash[:warning] = "你没有收藏该电影，怎么取消 XD"
