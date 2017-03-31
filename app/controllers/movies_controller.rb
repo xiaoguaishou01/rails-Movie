@@ -46,6 +46,32 @@ before_action :find_movie_and_check_permission, only: [:edit, :update, :destroy]
     flash[:alert] = "Movie deleted"
     redirect_to movies_path
   end
+
+  def favorite
+   @movie = Movie.find(params[:id])
+
+    if !current_user.is_member_of?(@movie)
+      current_user.favorite!(@movie)
+      flash[:notice] = "收藏电影成功！"
+    else
+      flash[:warning] = "你已经收藏过该电影了！"
+    end
+
+    redirect_to movie_path(@movie)
+  end
+
+  def cancel
+    @movie = Movie.find(params[:id])
+
+    if current_user.is_member_of?(@movie)
+      current_user.quit!(@movie)
+      flash[:alert] = "已取消收藏该电影！"
+    else
+      flash[:warning] = "你没有收藏该电影，怎么取消 XD"
+    end
+
+    redirect_to movie_path(@movie)
+  end
  private
 
  def find_movie_and_check_permission
