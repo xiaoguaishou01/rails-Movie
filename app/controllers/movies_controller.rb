@@ -2,7 +2,7 @@ class MoviesController < ApplicationController
 before_action :authenticate_user! , only: [:new, :create, :edit, :update, :destroy]
 before_action :find_movie_and_check_permission, only: [:edit, :update, :destroy]
   def index
-    @movies = Movie.all
+    @movies = Movie.includes(:user).all
   end
 
   def new
@@ -22,7 +22,7 @@ before_action :find_movie_and_check_permission, only: [:edit, :update, :destroy]
 
  def show
    @movie = Movie.find(params[:id])
-   @reviews = @movie.reviews.recent.paginate(:page => params[:page], :per_page => 5)
+   @reviews = @movie.reviews.includes(:user).recent.paginate(:page => params[:page], :per_page => 5)
  end
 
  def edit
